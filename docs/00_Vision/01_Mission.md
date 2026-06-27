@@ -35,6 +35,8 @@ This mission requires the platform to:
 - Connect data, workflows, AI recommendations, and human decisions.
 - Support managers without replacing their judgment.
 - Preserve restaurant-specific operating knowledge as durable documentation and system behavior.
+- Protect tenant, location, role, and permission boundaries as first-class product behavior.
+- Make important AI-assisted actions traceable from input data to recommendation to human review to outcome.
 
 ## User
 
@@ -57,6 +59,7 @@ The mission should be applied before product or technical work begins.
 4. Define the human decision owner.
 5. Define how AI may assist without removing reviewability.
 6. Document the behavior in the appropriate domain folder before implementation.
+7. Define the tenant, location, role, permission, and audit requirements for the workflow.
 
 If a proposed feature does not improve restaurant operations, decision quality, execution consistency, or operating knowledge, it should not be treated as mission-critical.
 
@@ -74,6 +77,8 @@ The mission sits above all platform domains.
 | Frontend | Screens must make status, exceptions, and next actions clear. |
 | AI | AI must assist, explain, and escalate when confidence or authority is insufficient. |
 | API | Integrations must connect operating context, not only move data. |
+| Security | Tenant isolation, role permissions, and auditability must be product behavior. |
+| Observability | Workflow state, data freshness, and AI review coverage must be measurable. |
 | Test | Tests must validate behavior against restaurant workflows. |
 
 ## Future Extension

@@ -32,6 +32,9 @@ It establishes:
 - Success metrics for evaluating whether the platform is working.
 - Non-goals that prevent scope drift.
 - A roadmap that organizes future work without prescribing implementation details too early.
+- The first self-review summary for the Vision Bible v1 draft.
+
+It also establishes the platform boundary for DOYA OS as a SaaS operating system. The product must support tenant isolation, role-aware access, location-aware workflows, AI reviewability, and operational audit trails before it expands into broad automation.
 
 ## User
 
@@ -49,20 +52,22 @@ This documentation is written for:
 
 Read the Vision Bible in this order:
 
-1. [Mission](./01_Mission.md)
-2. [Vision](./02_Vision.md)
-3. [Philosophy](./03_Philosophy.md)
-4. [Core Principles](./04_Core_Principles.md)
-5. [Product Goals](./05_Product_Goals.md)
-6. [Success Metrics](./06_Success_Metrics.md)
-7. [Non-Goals](./07_Non_Goals.md)
-8. [Roadmap](./08_Roadmap.md)
+1. [Review Summary](./00_Review_Summary.md)
+2. [Mission](./01_Mission.md)
+3. [Vision](./02_Vision.md)
+4. [Philosophy](./03_Philosophy.md)
+5. [Core Principles](./04_Core_Principles.md)
+6. [Product Goals](./05_Product_Goals.md)
+7. [Success Metrics](./06_Success_Metrics.md)
+8. [Non-Goals](./07_Non_Goals.md)
+9. [Roadmap](./08_Roadmap.md)
 
 This order moves from intent to constraints to evaluation to sequencing.
 
 ```mermaid
 flowchart TD
-    Mission["Mission"] --> Vision["Vision"]
+    Review["Review Summary"] --> Mission["Mission"]
+    Mission --> Vision["Vision"]
     Vision --> Philosophy["Philosophy"]
     Philosophy --> Principles["Core Principles"]
     Principles --> Goals["Product Goals"]
@@ -90,6 +95,13 @@ Downstream documentation should use this folder as source context:
 - Prompt documentation should encode the mission and guardrails into AI behavior.
 - Test documentation should validate the success metrics and non-goals.
 
+The Vision Bible also sets early SaaS architecture constraints:
+
+- Tenants, locations, roles, and permissions are product concepts, not only infrastructure details.
+- AI assistance requires a control plane for prompts, tools, evaluations, review states, and escalation rules.
+- Auditability is part of the operating model. The system should record important inputs, recommendations, approvals, corrections, and outcomes.
+- Observability must explain workflow health, data freshness, AI performance, and review coverage.
+
 ## Future Extension
 
 This folder will evolve when the platform vision changes, when new operating domains are added, or when major product decisions require clarification.
@@ -100,10 +112,12 @@ Future updates should:
 - Add decision records for major changes in direction.
 - Avoid duplicating product requirements that belong in `docs/01_Product/`.
 - Avoid documenting technical contracts that belong in backend, database, API, AI, or test documentation.
+- Re-run an architect review when new platform domains are added.
 
 ## Related Documents
 
 - [Documentation Style Guide](../STYLE_GUIDE.md)
+- [Review Summary](./00_Review_Summary.md)
 - [Mission](./01_Mission.md)
 - [Vision](./02_Vision.md)
 - [Philosophy](./03_Philosophy.md)

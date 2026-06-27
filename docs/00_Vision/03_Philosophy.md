@@ -22,7 +22,7 @@ DOYA OS needs a philosophy that prevents these patterns from becoming default be
 
 ## Solution
 
-DOYA OS should be built around five beliefs.
+DOYA OS should be built around six beliefs.
 
 ### Operations are the product
 
@@ -48,6 +48,12 @@ Restaurant teams need systems that are understandable during real work. Interfac
 
 Every decision, exception, correction, and outcome can become operating knowledge. DOYA OS should preserve that knowledge in ways that improve future workflows.
 
+### Trust is designed, not assumed
+
+Restaurant teams should be able to understand why the system made a recommendation, which data it used, who approved it, and what changed afterward.
+
+Trust requires tenant isolation, role permissions, review states, data freshness, audit history, and visible correction paths.
+
 ## User
 
 This philosophy is for:
@@ -69,6 +75,7 @@ Apply the philosophy during product and technical decisions:
 4. Decide what the system can safely automate, assist, or surface.
 5. Make the evidence and review path visible.
 6. Record outcomes so the workflow can improve.
+7. Confirm the tenant, role, and permission boundary before the system presents or applies the action.
 
 When tradeoffs appear, prefer operational clarity over technical novelty.
 
@@ -83,6 +90,8 @@ The philosophy affects architecture in these ways:
 - API contracts should keep business meaning intact across systems.
 - Prompt documents should define behavior in terms of role, context, and authority.
 - Tests should include realistic restaurant scenarios and failure states.
+- Security models should express restaurant ownership, location access, and role authority.
+- Observability should expose whether data, workflows, and AI assistance are trustworthy enough to act on.
 
 ## Future Extension
 

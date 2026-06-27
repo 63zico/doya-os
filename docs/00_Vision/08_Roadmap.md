@@ -48,18 +48,22 @@ Required outcomes:
 - Business date and location concepts.
 - Daily review and exception model.
 - Human ownership and approval rules.
+- Tenant, role, and permission assumptions for each workflow.
 
-### Phase 2: Data foundation
+### Phase 2: SaaS and data foundation
 
-Define the data model required to support restaurant workflows.
+Define the SaaS and data model required to support restaurant workflows.
 
 Required outcomes:
 
+- Tenant, location, role, and permission model.
+- Audit event model.
 - Core entities.
 - Data lifecycle.
 - Source-system assumptions.
 - Audit and correction requirements.
 - Reporting and operational state definitions.
+- Data freshness and sync-state requirements.
 
 ### Phase 3: AI operating layer
 
@@ -73,6 +77,8 @@ Required outcomes:
 - Human review boundaries.
 - Evaluation scenarios.
 - Escalation and correction behavior.
+- Prompt, model, tool, and policy versioning.
+- AI observability and review outcome requirements.
 
 ### Phase 4: Product workflows
 
@@ -100,6 +106,7 @@ Required outcomes:
 - Database schema aligned to the operating model.
 - AI services aligned to documented guardrails.
 - Tests aligned to success metrics.
+- Authorization, audit, and observability implemented as platform capabilities.
 
 ### Phase 6: Multi-location extension
 
@@ -112,6 +119,7 @@ Required outcomes:
 - Role and permission inheritance.
 - Standardization workflows.
 - Location-specific overrides.
+- Tenant-level administration for restaurant groups.
 
 ## User
 
@@ -132,8 +140,9 @@ Use the roadmap during planning:
 3. Confirm earlier phase documentation exists.
 4. Create or update source-of-truth documents before implementation.
 5. Define success metrics and non-goal boundaries.
-6. Implement only after the relevant documentation is reviewable.
-7. Record major deviations in `docs/decisions/`.
+6. Define SaaS, security, observability, and AI control-plane implications.
+7. Implement only after the relevant documentation is reviewable.
+8. Record major deviations in `docs/decisions/`.
 
 ## Architecture
 
@@ -144,7 +153,9 @@ It expects:
 - Vision to precede product requirements.
 - Operating workflows to precede application code.
 - Data meaning to precede schema implementation.
+- Tenant and permission boundaries to precede multi-location workflows.
 - AI guardrails to precede AI automation.
+- AI control-plane design to precede model or tool execution.
 - Test strategy to precede broad feature expansion.
 - Multi-location architecture to build on stable single-location workflows.
 

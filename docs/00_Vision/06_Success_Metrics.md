@@ -70,6 +70,27 @@ These metrics evaluate whether documentation remains useful:
 | Decision record coverage | Major tradeoffs are recorded in `docs/decisions/`. |
 | Agent readiness | AI coding agents can use docs to implement without undocumented assumptions. |
 
+### SaaS metrics
+
+These metrics evaluate whether the platform is ready to support restaurant groups safely:
+
+| Metric | Meaning |
+| --- | --- |
+| Tenant isolation coverage | Percentage of workflows with documented tenant and location boundaries. |
+| Role authorization coverage | Percentage of material actions with documented role permissions. |
+| Audit event completeness | Percentage of important actions recorded with actor, timestamp, reason, and outcome. |
+| Data freshness visibility | Percentage of operating views that expose source freshness or sync state. |
+
+### AI control metrics
+
+These metrics evaluate whether AI behavior is governed:
+
+| Metric | Meaning |
+| --- | --- |
+| Prompt version traceability | Percentage of AI outputs linked to prompt and policy versions. |
+| Tool permission coverage | Percentage of AI tool actions constrained by role and workflow scope. |
+| Evaluation scenario coverage | Percentage of AI workflows tested against documented restaurant scenarios. |
+
 ## User
 
 Success metrics are for:
@@ -90,7 +111,8 @@ Use success metrics during planning and review:
 3. Define how the metric can be observed.
 4. Define what change would count as improvement.
 5. Add tests, logs, or review flows needed to measure it.
-6. Revisit the metric after real usage or review.
+6. Confirm that tenant, permission, and AI review data can be observed.
+7. Revisit the metric after real usage or review.
 
 Do not add metrics that cannot affect product or operating decisions.
 
@@ -106,6 +128,9 @@ The architecture should support:
 - Business-date and location-aware reporting.
 - Operational exception tracking.
 - Documentation and decision record review during pull requests.
+- Tenant and role metadata attached to material events.
+- Data freshness indicators for operating views.
+- Prompt version, model version, tool permission, and review outcome records for AI workflows.
 
 Metrics should be designed as part of the operating system, not added later as detached analytics.
 

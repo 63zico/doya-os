@@ -66,6 +66,18 @@ Restaurant data and AI output will be imperfect.
 
 The platform must support correction, override, rejection, and audit trails. A correctable system is more trustworthy than a system that hides uncertainty.
 
+### 9. Treat tenant boundaries as product boundaries
+
+DOYA OS is a SaaS platform. Tenant, brand, location, role, and permission boundaries define what a person or AI agent may see, recommend, approve, or change.
+
+These boundaries must be designed into workflows before implementation.
+
+### 10. Make system health observable
+
+The platform must expose whether workflows, data pipelines, AI recommendations, and review processes are healthy enough to trust.
+
+Operational observability includes data freshness, exception age, review coverage, AI correction rate, and unresolved risk.
+
 ## User
 
 These principles are for:
@@ -89,6 +101,8 @@ Use the principles as a review sequence:
 6. Document the behavior before implementation.
 7. Verify the feature connects to the broader operating system.
 8. Add correction and audit behavior where errors may occur.
+9. Confirm tenant, location, role, and permission boundaries.
+10. Define the observability signals needed to operate the workflow.
 
 ## Architecture
 
@@ -104,10 +118,12 @@ These principles create cross-domain requirements:
 | Document first | Documentation becomes required implementation context. |
 | Build durable systems | APIs and services share common platform concepts. |
 | Design for correction | Audit trails and override paths are first-class behavior. |
+| Tenant boundaries | Authorization and data access reflect restaurant ownership and role authority. |
+| Observable health | Logs, events, metrics, and review states support operational trust. |
 
 ## Future Extension
 
-Future principles may be added when the platform enters new domains, such as finance, procurement, franchise governance, or automated supplier coordination.
+Future principles may be added when the platform enters new domains, such as finance, procurement, franchise governance, automated supplier coordination, or AI-assisted cross-location optimization.
 
 New principles must resolve a recurring decision problem. They should not duplicate existing principles or describe general preferences.
 

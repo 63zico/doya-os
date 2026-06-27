@@ -33,6 +33,8 @@ In the long term, DOYA OS should:
 - Assign or route work to the right human owner.
 - Track whether decisions were executed.
 - Learn from outcomes without hiding the reasoning process.
+- Support restaurants as a SaaS platform with clear tenant, location, role, and permission boundaries.
+- Operate AI through documented controls for prompts, tools, evaluations, escalation, and human review.
 
 DOYA OS should make a restaurant easier to operate because the system understands the work, not because it produces more reports.
 
@@ -57,7 +59,8 @@ The envisioned operating loop is:
 4. AI assists with interpretation, prioritization, and recommended next actions.
 5. A human owner reviews, approves, edits, or rejects the recommendation.
 6. The system records the decision and execution outcome.
-7. Future recommendations use the documented operating context and outcome history.
+7. Observability records workflow state, data freshness, AI review coverage, and outcome quality.
+8. Future recommendations use the documented operating context and outcome history.
 
 ```mermaid
 flowchart LR
@@ -84,6 +87,9 @@ Core architectural expectations:
 - Interfaces prioritize exception handling and decision support.
 - APIs preserve business meaning across integrations.
 - Tests validate complete operating flows, not only isolated functions.
+- Tenant isolation, role-based access, and location scope are required before multi-location expansion.
+- AI has a control plane for prompt versions, tool permissions, evaluation cases, review outcomes, and escalation rules.
+- Observability covers operational workflows and AI behavior, not only infrastructure health.
 
 The platform should remain modular, but not conceptually fragmented. Each domain must contribute to the operating loop.
 
@@ -97,6 +103,8 @@ The vision can extend across:
 - Forecasting for staffing, purchasing, prep, and cash planning.
 - Restaurant playbooks that translate documented standards into workflows.
 - Cross-location learning based on comparable operating patterns.
+- Tenant-level administration for restaurant groups, brands, and operating regions.
+- AI evaluation suites based on real operating scenarios and documented acceptance criteria.
 
 Future extensions must keep human authority, traceability, and operational clarity intact.
 

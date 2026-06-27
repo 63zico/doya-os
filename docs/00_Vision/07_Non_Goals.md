@@ -64,6 +64,24 @@ The platform should not add application code before the relevant behavior, workf
 
 Documentation remains the source of truth.
 
+### 8. DOYA OS is not an autonomous restaurant operator
+
+The platform should not become the hidden authority for pricing, staffing, purchasing, disciplinary, supplier, or financial decisions.
+
+AI may assist these domains only when the workflow defines evidence, permission, review, and accountability.
+
+### 9. DOYA OS is not a generic SaaS admin template
+
+The platform needs identity, tenant, role, billing-ready ownership, and administration concepts, but those concepts must serve restaurant operations.
+
+Generic account management is not enough if it does not protect location scope, operating authority, and auditability.
+
+### 10. DOYA OS is not a raw data lake
+
+The platform may collect data from many systems, but raw storage is not the goal.
+
+Data must be structured into operating concepts that support decisions, workflows, review, and AI assistance.
+
 ## User
 
 Non-goals are for:
@@ -96,6 +114,9 @@ They imply:
 - Dashboards should be connected to operational actions.
 - Automation should include ownership, review, and audit architecture.
 - Marketing, finance, and external communication systems should not become core architecture without documented product decisions.
+- Autonomous AI actions require explicit permission and review architecture before they can exist.
+- SaaS administration should model restaurant ownership, location scope, and role authority.
+- Data ingestion should produce operational meaning, not only centralized storage.
 
 ## Future Extension
 

@@ -61,6 +61,18 @@ Multi-location support should be built on reliable single-location workflows.
 
 Important operational changes should have traceability: what changed, why it changed, who approved it, and what outcome followed.
 
+### 8. Establish the SaaS operating foundation
+
+The platform should support tenants, locations, roles, permissions, audit history, and administrative boundaries before product workflows depend on them.
+
+SaaS infrastructure is product infrastructure because restaurant groups need controlled access across owners, managers, staff, and external contributors.
+
+### 9. Build an AI control plane
+
+AI behavior should be configured, evaluated, versioned, and reviewed through documented platform controls.
+
+The goal is not only to call models. The goal is to make AI assistance dependable inside restaurant operations.
+
 ## User
 
 Product goals serve:
@@ -83,7 +95,8 @@ Use product goals during feature evaluation:
 4. Define the operating context required.
 5. Define what AI may assist with, if applicable.
 6. Define how success will be measured.
-7. Document non-goal boundaries before implementation.
+7. Define tenant, role, permission, and audit requirements.
+8. Document non-goal boundaries before implementation.
 
 Features that do not map to a product goal need explicit justification.
 
@@ -98,6 +111,8 @@ Product goals shape the platform architecture:
 - Execution consistency requires ownership, task completion, and audit behavior.
 - Multi-location scalability requires tenant, location, role, and permission boundaries.
 - Reviewable change requires logs, approvals, and traceable event history.
+- SaaS foundation requires identity, authorization, tenant isolation, administrative controls, and billing-ready ownership concepts.
+- AI control requires prompt versioning, tool permissions, evaluation datasets, review outcomes, escalation policies, and model behavior logs.
 
 ## Future Extension
 
