@@ -1,0 +1,106 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 216 33% 97%;
+    --foreground: 221 39% 11%;
+
+    --surface-canvas: 216 33% 97%;
+    --surface-base: 0 0% 100%;
+    --surface-subtle: 210 20% 96%;
+    --surface-raised: 0 0% 100%;
+
+    --border: 214 22% 87%;
+    --input: 214 22% 87%;
+    --ring: 221 83% 53%;
+
+    --primary: 221 83% 53%;
+    --primary-foreground: 0 0% 100%;
+
+    --success: 143 72% 29%;
+    --success-foreground: 0 0% 100%;
+    --success-subtle: 142 76% 95%;
+
+    --warning: 38 72% 42%;
+    --warning-foreground: 28 55% 12%;
+    --warning-subtle: 48 96% 92%;
+
+    --danger: 18 89% 40%;
+    --danger-foreground: 0 0% 100%;
+    --danger-subtle: 24 100% 95%;
+
+    --ai: 240 61% 60%;
+    --ai-foreground: 0 0% 100%;
+    --ai-subtle: 240 100% 97%;
+
+    --muted: 220 14% 94%;
+    --muted-foreground: 220 9% 43%;
+    --accent: 210 20% 96%;
+    --accent-foreground: 221 39% 11%;
+
+    --radius-card: 8px;
+    --radius-control: 6px;
+  }
+
+  .dark {
+    --background: 222 24% 7%;
+    --foreground: 210 33% 97%;
+
+    --surface-canvas: 222 24% 7%;
+    --surface-base: 222 23% 11%;
+    --surface-subtle: 218 23% 15%;
+    --surface-raised: 218 22% 18%;
+
+    --border: 216 21% 21%;
+    --input: 216 21% 21%;
+    --ring: 224 100% 68%;
+
+    --primary: 224 100% 68%;
+    --primary-foreground: 222 24% 7%;
+
+    --success: 142 52% 51%;
+    --success-foreground: 222 24% 7%;
+    --success-subtle: 144 47% 13%;
+
+    --warning: 40 87% 62%;
+    --warning-foreground: 222 24% 7%;
+    --warning-subtle: 36 48% 15%;
+
+    --danger: 14 100% 65%;
+    --danger-foreground: 222 24% 7%;
+    --danger-subtle: 13 48% 16%;
+
+    --ai: 239 100% 77%;
+    --ai-foreground: 222 24% 7%;
+    --ai-subtle: 239 35% 18%;
+
+    --muted: 218 23% 15%;
+    --muted-foreground: 217 13% 70%;
+    --accent: 218 22% 18%;
+    --accent-foreground: 210 33% 97%;
+  }
+
+  * {
+    @apply border-border;
+  }
+
+  html {
+    @apply bg-surface-canvas;
+  }
+
+  body {
+    @apply bg-surface-canvas text-foreground antialiased;
+  }
+
+  ::selection {
+    @apply bg-primary/15 text-foreground;
+  }
+}
+
+@layer utilities {
+  .tabular-nums {
+    font-variant-numeric: tabular-nums;
+  }
+}
