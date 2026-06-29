@@ -18,7 +18,7 @@ type ClosingZoneCardProps = {
 function getPrimaryAction(zone: ClosingZone) {
   if (zone.status === "FAIL") {
     return {
-      href: `/ai-closing/capture/${zone.id}`,
+      href: `/ai-closing/capture/${zone.id}?resubmission=1`,
       label: "Resubmit",
       icon: RotateCcw,
       variant: "danger" as const,

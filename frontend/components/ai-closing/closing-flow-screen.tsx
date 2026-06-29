@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { ArrowLeft, History, ShieldAlert } from "lucide-react";
 import { AiClosingPageHeader } from "@/components/ai-closing/ai-closing-page-header";
@@ -29,6 +30,40 @@ export function ClosingFlowScreen({
   description,
   zones,
 }: ClosingFlowScreenProps) {
+  const [visibleZones, setVisibleZones] = useState(zones);
+
+  useEffect(() => {
+    let active = true;
+
+    async function loadClosingState() {
+      try {
+        const response = await fetch("/api/ai-closing/state", {
+          cache: "no-store",
+        });
+
+        if (!response.ok) {
+          return;
+        }
+
+        const state = (await response.json()) as { zones: ClosingZone[] };
+
+        if (active) {
+          setVisibleZones(
+            state.zones.filter((candidate) => candidate.area === area),
+          );
+        }
+      } catch {
+        // The server-provided mock zones remain the fallback repository.
+      }
+    }
+
+    void loadClosingState();
+
+    return () => {
+      active = false;
+    };
+  }, [area]);
+
   return (
     <>
       <AiClosingPageHeader
@@ -80,7 +115,7 @@ export function ClosingFlowScreen({
         }}
         aria-label={`${area} required zones`}
       >
-        {zones.map((zone) => (
+        {visibleZones.map((zone) => (
           <motion.div
             key={zone.id}
             variants={{

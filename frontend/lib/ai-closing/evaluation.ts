@@ -23,8 +23,19 @@ export type VisionEvaluationAuditMeta = {
   submission_id: string;
 };
 
+export type VisionEvaluationPersistenceMeta = {
+  repository_mode: "supabase" | "mock";
+  closing_session_id?: string;
+  persisted_submission_id?: string;
+  vision_review_id?: string;
+  storage_bucket?: string;
+  storage_path?: string;
+  audit_log_ids?: string[];
+};
+
 export type VisionEvaluationResponse = VisionEvaluation &
-  VisionEvaluationAuditMeta;
+  VisionEvaluationAuditMeta &
+  Partial<VisionEvaluationPersistenceMeta>;
 
 export const visionEvaluationJsonSchema = {
   type: "object",
@@ -156,7 +167,7 @@ export function mapEvaluationToUiResult(
   zone: ClosingZone,
 ) {
   return {
-    submissionId: zone.submissionId,
+    submissionId: evaluation.persisted_submission_id ?? zone.submissionId,
     zoneId: zone.id,
     status: evaluation.status,
     score: evaluation.score,

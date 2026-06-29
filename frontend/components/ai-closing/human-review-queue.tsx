@@ -1,11 +1,12 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { CheckCircle2, ShieldAlert, XCircle } from "lucide-react";
 import { DashboardCard } from "@/components/dashboard/dashboard-card";
 import { StatusBadge } from "@/components/dashboard/status-badge";
 import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
 import type { HumanReviewItem } from "@/lib/ai-closing-data";
 
 type HumanReviewQueueProps = {
@@ -15,13 +16,94 @@ type HumanReviewQueueProps = {
 type ReviewDecision = "APPROVED" | "REJECTED";
 
 export function HumanReviewQueue({ items }: HumanReviewQueueProps) {
+  const [queueItems, setQueueItems] = useState(items);
   const [decisions, setDecisions] = useState<Record<string, ReviewDecision>>(
     {},
   );
+  const [error, setError] = useState<string>();
+
+  useEffect(() => {
+    let active = true;
+
+    async function loadQueue() {
+      try {
+        const response = await fetch("/api/ai-closing/reviews", {
+          cache: "no-store",
+        });
+
+        if (!response.ok) {
+          return;
+        }
+
+        const body = (await response.json()) as { items: HumanReviewItem[] };
+
+        if (active) {
+          setQueueItems(body.items);
+        }
+      } catch {
+        // The initial queue is the mock fallback.
+      }
+    }
+
+    void loadQueue();
+
+    return () => {
+      active = false;
+    };
+  }, []);
+
+  async function saveDecision(itemId: string, decision: ReviewDecision) {
+    setError(undefined);
+    setDecisions((current) => ({
+      ...current,
+      [itemId]: decision,
+    }));
+
+    try {
+      const response = await fetch("/api/ai-closing/reviews", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          reviewId: itemId,
+          decision: decision === "APPROVED" ? "approved" : "rejected",
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Review decision could not be saved.");
+      }
+    } catch (decisionError) {
+      setError(
+        decisionError instanceof Error
+          ? decisionError.message
+          : "Review decision could not be saved.",
+      );
+    }
+  }
+
+  if (queueItems.length === 0) {
+    return (
+      <Card className="p-4">
+        <p className="text-sm font-semibold">No reviews waiting</p>
+        <p className="mt-2 text-sm leading-6 text-muted-foreground">
+          There are no failed or uncertain closing submissions for the current
+          business date.
+        </p>
+      </Card>
+    );
+  }
 
   return (
     <div className="space-y-3">
-      {items.map((item) => {
+      {error ? (
+        <Card className="border-danger/30 bg-danger-subtle p-3">
+          <p className="text-sm font-medium">{error}</p>
+        </Card>
+      ) : null}
+
+      {queueItems.map((item) => {
         const decision = decisions[item.id];
 
         return (
@@ -80,27 +162,14 @@ export function HumanReviewQueue({ items }: HumanReviewQueueProps) {
                   Mock manager action
                 </p>
                 <div className="mt-3 flex flex-col gap-2">
-                  <Button
-                    type="button"
-                    onClick={() =>
-                      setDecisions((current) => ({
-                        ...current,
-                        [item.id]: "APPROVED",
-                      }))
-                    }
-                  >
+                  <Button type="button" onClick={() => saveDecision(item.id, "APPROVED")}>
                     <CheckCircle2 aria-hidden="true" />
                     Approve evidence
                   </Button>
                   <Button
                     type="button"
                     variant="danger"
-                    onClick={() =>
-                      setDecisions((current) => ({
-                        ...current,
-                        [item.id]: "REJECTED",
-                      }))
-                    }
+                    onClick={() => saveDecision(item.id, "REJECTED")}
                   >
                     <XCircle aria-hidden="true" />
                     Reject and re-clean
@@ -113,8 +182,8 @@ export function HumanReviewQueue({ items }: HumanReviewQueueProps) {
                 </div>
                 {decision ? (
                   <p className="mt-3 text-xs leading-5 text-muted-foreground">
-                    This decision is local UI state only. In production it would
-                    create audit and correction records.
+                    This decision has been sent to the active repository. In
+                    mock mode it remains local; in Supabase mode it is audited.
                   </p>
                 ) : null}
               </div>

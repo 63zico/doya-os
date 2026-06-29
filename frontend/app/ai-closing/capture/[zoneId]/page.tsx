@@ -11,22 +11,29 @@ type CapturePageProps = {
   params: Promise<{
     zoneId: string;
   }>;
+  searchParams: Promise<{
+    resubmission?: string;
+  }>;
 };
 
 export function generateStaticParams() {
   return aiClosingData.zones.map((zone) => ({ zoneId: zone.id }));
 }
 
-export default async function CapturePage({ params }: CapturePageProps) {
+export default async function CapturePage({
+  params,
+  searchParams,
+}: CapturePageProps) {
   const { zoneId } = await params;
+  const { resubmission } = await searchParams;
   const zone = getZone(zoneId);
 
   return (
     <AppShell activePath="/ai-closing">
       <AiClosingPageHeader
-        eyebrow="Photo capture mock"
+        eyebrow="Photo evidence"
         title={zone ? `${zone.label} evidence` : "Unknown closing zone"}
-        description="Capture is mocked for v1 frontend implementation. No camera, upload, backend, or storage integration is connected."
+        description="Upload closing evidence for AI inspection. Supabase persistence is used when configured, with mock mode as the fallback."
         action={
           <Button asChild variant="secondary">
             <Link href="/ai-closing">
@@ -38,7 +45,7 @@ export default async function CapturePage({ params }: CapturePageProps) {
       />
 
       {zone ? (
-        <PhotoCaptureMock zone={zone} />
+        <PhotoCaptureMock zone={zone} isResubmission={resubmission === "1"} />
       ) : (
         <Card className="p-4">
           <p className="text-sm font-semibold">Zone not found</p>

@@ -6,6 +6,10 @@ import { AppShell } from "@/components/layout/app-shell";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { aiClosingData, getResult, getZone } from "@/lib/ai-closing-data";
+import type { AiEvaluationResult } from "@/lib/ai-closing-data";
+import { resolveAiClosingRepositoryContext } from "@/lib/ai-closing/supabase-context";
+import { SupabaseAiClosingRepository } from "@/lib/repositories/ai-closing-repository";
+import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 
 type ResultPageProps = {
   params: Promise<{
@@ -19,10 +23,58 @@ export function generateStaticParams() {
   }));
 }
 
+async function getSupabaseResult(submissionId: string) {
+  const repositoryContext = resolveAiClosingRepositoryContext();
+
+  if (repositoryContext.mode === "mock") {
+    return undefined;
+  }
+
+  try {
+    const repository = new SupabaseAiClosingRepository(
+      createSupabaseAdminClient(),
+    );
+    const submissions = await repository.listClosingState(
+      repositoryContext.context.storeId,
+      repositoryContext.context.businessDate,
+    );
+    const submission = submissions.find((item) => item.id === submissionId);
+    const review = submission?.vision_reviews?.[0];
+    const zone = submission
+      ? getZone(submission.category)
+      : undefined;
+
+    if (!submission || !review || !zone) {
+      return undefined;
+    }
+
+    return {
+      zone,
+      result: {
+        submissionId: submission.id,
+        zoneId: zone.id,
+        status: review.status,
+        score: review.score,
+        confidence: review.confidence / 100,
+        reason: review.explanation,
+        requiredAction: review.recommended_actions.join(" "),
+        timestamp: review.created_at,
+        model: review.model,
+        policyVersion: review.prompt_version,
+        detectedIssues: review.detected_issues,
+        recommendedActions: review.recommended_actions,
+      } satisfies AiEvaluationResult,
+    };
+  } catch {
+    return undefined;
+  }
+}
+
 export default async function ResultPage({ params }: ResultPageProps) {
   const { submissionId } = await params;
-  const result = getResult(submissionId);
-  const zone = result ? getZone(result.zoneId) : undefined;
+  const persisted = await getSupabaseResult(submissionId);
+  const result = persisted?.result ?? getResult(submissionId);
+  const zone = persisted?.zone ?? (result ? getZone(result.zoneId) : undefined);
 
   return (
     <AppShell activePath="/ai-closing">
@@ -51,7 +103,7 @@ export default async function ResultPage({ params }: ResultPageProps) {
             <div>
               <p className="text-sm font-semibold">Photo required</p>
               <p className="mt-2 text-sm leading-6 text-muted-foreground">
-                No mock evaluation exists for this submission yet. Submit zone
+                No evaluation exists for this submission yet. Submit zone
                 evidence first, then return to the result screen.
               </p>
             </div>

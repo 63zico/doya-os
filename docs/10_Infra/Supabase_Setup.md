@@ -65,10 +65,10 @@ Phase 1 creates the foundation:
 
 Phase 2 connects product flows:
 
-- Replace direct mock-data imports with repository calls.
+- Replace direct mock-data imports with repository calls one module at a time.
+- Persist AI Closing sessions, photo submissions, Vision reviews, human review decisions, and audit logs.
 - Add authenticated route boundaries.
 - Add staff onboarding and role assignment screens.
-- Persist AI Closing submissions and vision reviews.
 - Persist inventory entries and dashboard summaries.
 
 Phase 3 hardens production:
@@ -100,6 +100,10 @@ Create `frontend/.env.local` for local development:
 NEXT_PUBLIC_SUPABASE_URL=
 NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=
 SUPABASE_SERVICE_ROLE_KEY=
+SUPABASE_DEFAULT_ORGANIZATION_ID=
+SUPABASE_DEFAULT_STORE_ID=
+SUPABASE_DEFAULT_STAFF_ID=
+SUPABASE_DEFAULT_BUSINESS_DATE=
 OPENAI_API_KEY=
 OPENAI_VISION_MODEL=gpt-5.5
 ```
@@ -110,6 +114,9 @@ Rules:
 - `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` is safe for browser use when RLS is correct.
 - `SUPABASE_SERVICE_ROLE_KEY` must never be exposed to browser code.
 - Service-role access must be used only in trusted server routes or jobs.
+- `SUPABASE_DEFAULT_ORGANIZATION_ID` and `SUPABASE_DEFAULT_STORE_ID` activate AI Closing Supabase mode until authenticated app-shell context is wired.
+- `SUPABASE_DEFAULT_STAFF_ID` is optional and is used as the audit actor for AI Closing development flows.
+- `SUPABASE_DEFAULT_BUSINESS_DATE` is optional. If omitted, AI Closing uses the current documented mock business date until runtime store context is implemented.
 - Production keys must be stored in the deployment provider secret manager.
 
 ## Local Development
@@ -155,6 +162,8 @@ Production deployment should follow this order:
 
 Do not deploy frontend features that depend on Supabase data before tenant, staff, role, and store seed data exists.
 
+AI Closing persistence is enabled only when Supabase service credentials and default organization and store IDs are configured. Without that context, the UI intentionally remains in mock mode.
+
 ## Database Migrations
 
 Migrations must be applied in filename order.
@@ -197,6 +206,14 @@ avatars/staff/{staff_id}/{filename}
 ```
 
 Storage policies use path segments to resolve store, organization, or staff scope.
+
+AI Closing uploads use:
+
+```text
+closing-photos/stores/{store_id}/closing/{business_date}/{zone_id}/{uuid}-{filename}
+```
+
+The uploaded object path is stored in `closing_photo_submissions.storage_path`.
 
 ## Auth Setup
 
@@ -297,10 +314,12 @@ Future work should add:
 - Edge Functions or server jobs for AI evaluation persistence.
 - Database webhooks for notifications.
 - Production monitoring for denied access and storage errors.
+- Authenticated AI Closing context that removes the need for default organization and store environment variables.
 
 ## Related Documents
 
 - [Database Architecture](../05_Database/README.md)
 - [Supabase RLS Policies](../05_Database/12_Supabase_RLS_Policies.md)
 - [API Authentication and RBAC](../06_API/02_Authentication_And_RBAC.md)
+- [AI Closing Supabase Flow](./AI_Closing_Supabase_Flow.md)
 - [Dataset Platform](../09_Dataset/README.md)

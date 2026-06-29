@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import {
   ArrowRight,
@@ -16,7 +17,10 @@ import { StatusBadge } from "@/components/dashboard/status-badge";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
-import { aiClosingData, getZonesByArea } from "@/lib/ai-closing-data";
+import {
+  aiClosingData,
+  type ClosingZone,
+} from "@/lib/ai-closing-data";
 
 const cardMotion = {
   hidden: { opacity: 0, y: 10 },
@@ -24,8 +28,53 @@ const cardMotion = {
 };
 
 export function AiClosingOverview() {
-  const kitchenZones = getZonesByArea("kitchen");
-  const hallZones = getZonesByArea("hall");
+  const [closingState, setClosingState] = useState({
+    overview: aiClosingData.overview,
+    zones: aiClosingData.zones as ClosingZone[],
+    mode: "mock",
+  });
+  const kitchenZones = closingState.zones.filter(
+    (zone) => zone.area === "kitchen",
+  );
+  const hallZones = closingState.zones.filter((zone) => zone.area === "hall");
+
+  useEffect(() => {
+    let active = true;
+
+    async function loadClosingState() {
+      try {
+        const response = await fetch("/api/ai-closing/state", {
+          cache: "no-store",
+        });
+
+        if (!response.ok) {
+          return;
+        }
+
+        const state = (await response.json()) as {
+          overview: typeof aiClosingData.overview;
+          zones: ClosingZone[];
+          mode: string;
+        };
+
+        if (active) {
+          setClosingState({
+            overview: state.overview,
+            zones: state.zones,
+            mode: state.mode,
+          });
+        }
+      } catch {
+        // The mock state is the fallback repository.
+      }
+    }
+
+    void loadClosingState();
+
+    return () => {
+      active = false;
+    };
+  }, []);
 
   return (
     <>
@@ -57,11 +106,11 @@ export function AiClosingOverview() {
             Session completion
           </p>
           <p className="mt-2 tabular-nums text-2xl font-semibold">
-            {aiClosingData.overview.completion}%
+            {closingState.overview.completion}%
           </p>
           <Progress
             className="mt-3"
-            value={aiClosingData.overview.completion}
+            value={closingState.overview.completion}
             indicatorClassName="bg-ai"
           />
         </Card>
@@ -70,7 +119,7 @@ export function AiClosingOverview() {
             Human reviews
           </p>
           <p className="mt-2 tabular-nums text-2xl font-semibold">
-            {aiClosingData.overview.openReviews}
+            {closingState.overview.openReviews}
           </p>
           <p className="mt-2 text-sm text-muted-foreground">
             Manager action required
@@ -81,7 +130,7 @@ export function AiClosingOverview() {
             Failed items
           </p>
           <p className="mt-2 tabular-nums text-2xl font-semibold">
-            {aiClosingData.overview.failedItems}
+            {closingState.overview.failedItems}
           </p>
           <p className="mt-2 text-sm text-muted-foreground">
             Re-clean before final close
@@ -92,10 +141,12 @@ export function AiClosingOverview() {
             Submitted photos
           </p>
           <p className="mt-2 tabular-nums text-2xl font-semibold">
-            {aiClosingData.overview.submittedPhotos}
+            {closingState.overview.submittedPhotos}
           </p>
           <p className="mt-2 text-sm text-muted-foreground">
-            Mock local evidence
+            {closingState.mode === "supabase"
+              ? "Persisted evidence"
+              : "Mock local evidence"}
           </p>
         </Card>
       </section>
@@ -107,7 +158,7 @@ export function AiClosingOverview() {
       >
         <div className="grid gap-4 lg:grid-cols-[1fr_320px]">
           <p className="text-sm leading-6 text-muted-foreground">
-            {aiClosingData.overview.summary}
+            {closingState.overview.summary}
           </p>
           <div className="grid gap-2 sm:grid-cols-3 lg:grid-cols-1">
             <Button asChild variant="secondary">

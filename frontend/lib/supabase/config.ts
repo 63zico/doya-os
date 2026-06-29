@@ -11,6 +11,13 @@ export function getSupabaseBrowserConfig() {
   return { url, publishableKey };
 }
 
+export function isSupabaseBrowserConfigured() {
+  return Boolean(
+    process.env.NEXT_PUBLIC_SUPABASE_URL &&
+      process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY,
+  );
+}
+
 export function getSupabaseServiceConfig() {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
@@ -22,4 +29,11 @@ export function getSupabaseServiceConfig() {
   }
 
   return { url, serviceRoleKey };
+}
+
+export function isSupabaseServiceConfigured() {
+  return Boolean(
+    process.env.NEXT_PUBLIC_SUPABASE_URL &&
+      process.env.SUPABASE_SERVICE_ROLE_KEY,
+  );
 }

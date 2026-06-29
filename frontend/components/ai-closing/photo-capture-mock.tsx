@@ -13,7 +13,11 @@ import {
 import { AiClosingStatusBadge } from "@/components/ai-closing/ai-closing-status-badge";
 import { DashboardCard } from "@/components/dashboard/dashboard-card";
 import { Button } from "@/components/ui/button";
-import type { AiClosingStatus, ClosingZone } from "@/lib/ai-closing-data";
+import {
+  aiClosingData,
+  type AiClosingStatus,
+  type ClosingZone,
+} from "@/lib/ai-closing-data";
 import {
   mapEvaluationToUiResult,
   type VisionEvaluationResponse,
@@ -23,6 +27,7 @@ type CaptureStage = "READY" | "PHOTO_SELECTED" | "ANALYZING" | "SUBMITTED" | "ER
 
 type PhotoCaptureMockProps = {
   zone: ClosingZone;
+  isResubmission?: boolean;
 };
 
 const stageStatus: Record<CaptureStage, AiClosingStatus> = {
@@ -33,7 +38,10 @@ const stageStatus: Record<CaptureStage, AiClosingStatus> = {
   ERROR: "HUMAN_REVIEW",
 };
 
-export function PhotoCaptureMock({ zone }: PhotoCaptureMockProps) {
+export function PhotoCaptureMock({
+  zone,
+  isResubmission = false,
+}: PhotoCaptureMockProps) {
   const [stage, setStage] = useState<CaptureStage>("READY");
   const [selectedFile, setSelectedFile] = useState<File>();
   const [error, setError] = useState<string>();
@@ -52,6 +60,11 @@ export function PhotoCaptureMock({ zone }: PhotoCaptureMockProps) {
     const formData = new FormData();
     formData.append("zoneId", zone.id);
     formData.append("image", selectedFile);
+    formData.append("businessDate", aiClosingData.businessDate);
+
+    if (zone.status === "FAIL" || isResubmission) {
+      formData.append("resubmission", "true");
+    }
 
     try {
       const response = await fetch("/api/ai-closing/evaluate", {
@@ -74,6 +87,10 @@ export function PhotoCaptureMock({ zone }: PhotoCaptureMockProps) {
       const uiResult = mapEvaluationToUiResult(evaluationResponse, zone);
       sessionStorage.setItem(
         `doya-ai-closing-result:${zone.submissionId}`,
+        JSON.stringify(uiResult),
+      );
+      sessionStorage.setItem(
+        `doya-ai-closing-result:${uiResult.submissionId}`,
         JSON.stringify(uiResult),
       );
       setEvaluation(evaluationResponse);
@@ -150,8 +167,8 @@ export function PhotoCaptureMock({ zone }: PhotoCaptureMockProps) {
               <CheckCircle2 aria-hidden="true" className="size-10 text-success" />
               <p className="mt-4 text-sm font-semibold">Evaluation complete</p>
               <p className="mt-2 max-w-sm text-sm leading-6 text-muted-foreground">
-                The AI result is stored locally for this session and is ready to
-                review on the result screen.
+                The AI result has been saved through the active repository and
+                is ready to review on the result screen.
               </p>
               {evaluation ? (
                 <p className="mt-2 text-sm font-semibold">
