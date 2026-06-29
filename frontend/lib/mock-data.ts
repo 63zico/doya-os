@@ -39,6 +39,7 @@ export type AlertItem = {
 
 export type NavItem = {
   label: string;
+  href: string;
   icon: LucideIcon;
   active?: boolean;
   count?: number;
@@ -53,13 +54,13 @@ export const dashboardData = {
     lastUpdated: "10:16 AM",
   },
   navigation: [
-    { label: "Dashboard", icon: Home, active: true },
-    { label: "AI Manager", icon: Bot, count: 3 },
-    { label: "AI Closing", icon: ClipboardCheck, count: 2 },
-    { label: "Inventory", icon: PackageSearch, count: 4 },
-    { label: "Bonus", icon: Gauge },
-    { label: "SOP Library", icon: ShieldCheck },
-    { label: "Settings", icon: Settings },
+    { label: "Dashboard", href: "/", icon: Home },
+    { label: "AI Manager", href: "/ai-manager", icon: Bot, count: 3 },
+    { label: "AI Closing", href: "/ai-closing", icon: ClipboardCheck, count: 2 },
+    { label: "Inventory", href: "/inventory", icon: PackageSearch, count: 4 },
+    { label: "Bonus", href: "/bonus", icon: Gauge },
+    { label: "SOP Library", href: "/sop-library", icon: ShieldCheck },
+    { label: "Settings", href: "/settings", icon: Settings },
   ] satisfies NavItem[],
   storeHealth: {
     title: "Store Health",

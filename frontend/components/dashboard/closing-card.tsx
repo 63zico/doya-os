@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { Camera, ClipboardCheck } from "lucide-react";
 import { DashboardCard } from "@/components/dashboard/dashboard-card";
 import { StatusBadge } from "@/components/dashboard/status-badge";
@@ -62,13 +63,17 @@ export function ClosingCard({ closing }: ClosingCardProps) {
           ))}
         </div>
         <div className="flex gap-2">
-          <Button type="button">
-            <ClipboardCheck aria-hidden="true" />
-            Review queue
+          <Button asChild>
+            <Link href="/ai-closing/review">
+              <ClipboardCheck aria-hidden="true" />
+              Review queue
+            </Link>
           </Button>
-          <Button type="button" variant="secondary">
-            <Camera aria-hidden="true" />
-            Evidence
+          <Button asChild variant="secondary">
+            <Link href="/ai-closing">
+              <Camera aria-hidden="true" />
+              Evidence
+            </Link>
           </Button>
         </div>
       </div>

@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import type { NavItem } from "@/lib/mock-data";
@@ -5,9 +6,18 @@ import { cn } from "@/lib/utils";
 
 type AppSidebarProps = {
   navigation: NavItem[];
+  activePath: string;
 };
 
-export function AppSidebar({ navigation }: AppSidebarProps) {
+function isActivePath(activePath: string, href: string) {
+  if (href === "/") {
+    return activePath === href;
+  }
+
+  return activePath === href || activePath.startsWith(`${href}/`);
+}
+
+export function AppSidebar({ navigation, activePath }: AppSidebarProps) {
   return (
     <aside className="hidden min-h-screen w-72 shrink-0 border-r border-border bg-surface-base lg:flex lg:flex-col">
       <div className="px-5 py-5">
@@ -27,17 +37,19 @@ export function AppSidebar({ navigation }: AppSidebarProps) {
       <nav className="flex-1 space-y-1 px-3 py-4" aria-label="Primary">
         {navigation.map((item) => {
           const Icon = item.icon;
+          const active = isActivePath(activePath, item.href);
 
           return (
-            <button
+            <Link
               key={item.label}
+              href={item.href}
               className={cn(
                 "flex w-full items-center justify-between rounded-md px-3 py-2 text-left text-sm font-medium outline-none transition-colors focus-visible:ring-2 focus-visible:ring-ring",
-                item.active
+                active
                   ? "bg-accent text-foreground"
                   : "text-muted-foreground hover:bg-accent hover:text-foreground",
               )}
-              type="button"
+              aria-current={active ? "page" : undefined}
             >
               <span className="flex min-w-0 items-center gap-3">
                 <Icon aria-hidden="true" className="size-4 shrink-0" />
@@ -48,7 +60,7 @@ export function AppSidebar({ navigation }: AppSidebarProps) {
                   {item.count}
                 </Badge>
               ) : null}
-            </button>
+            </Link>
           );
         })}
       </nav>
