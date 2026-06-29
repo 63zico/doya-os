@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { ArrowLeft, Camera } from "lucide-react";
 import { AiClosingPageHeader } from "@/components/ai-closing/ai-closing-page-header";
-import { AiEvaluationCard } from "@/components/ai-closing/ai-evaluation-card";
+import { AiEvaluationResultClient } from "@/components/ai-closing/ai-evaluation-result-client";
 import { AppShell } from "@/components/layout/app-shell";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -40,8 +40,8 @@ export default async function ResultPage({ params }: ResultPageProps) {
         }
       />
 
-      {result && zone ? (
-        <AiEvaluationCard result={result} zone={zone} />
+      {zone ? (
+        <AiEvaluationResultClient fallbackResult={result} zone={zone} />
       ) : (
         <Card className="p-4">
           <div className="flex items-start gap-3">

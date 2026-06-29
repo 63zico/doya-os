@@ -33,6 +33,8 @@ export type AiEvaluationResult = {
   timestamp: string;
   model: string;
   policyVersion: string;
+  detectedIssues?: string[];
+  recommendedActions?: string[];
 };
 
 export type HumanReviewItem = {

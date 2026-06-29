@@ -1,5 +1,11 @@
 import Link from "next/link";
-import { Bot, CheckCircle2, ClipboardCheck, RotateCcw, ShieldAlert } from "lucide-react";
+import {
+  Bot,
+  CheckCircle2,
+  ClipboardCheck,
+  RotateCcw,
+  ShieldAlert,
+} from "lucide-react";
 import { AiClosingStatusBadge } from "@/components/ai-closing/ai-closing-status-badge";
 import { DashboardCard } from "@/components/dashboard/dashboard-card";
 import { Button } from "@/components/ui/button";
@@ -78,6 +84,34 @@ export function AiEvaluationCard({ result, zone }: AiEvaluationCardProps) {
             {result.requiredAction}
           </p>
         </div>
+
+        {result.detectedIssues?.length ? (
+          <div className="rounded-md border border-border bg-surface-subtle p-4">
+            <p className="text-sm font-semibold">Detected issues</p>
+            <ul className="mt-2 space-y-2 text-sm leading-6 text-muted-foreground">
+              {result.detectedIssues.map((issue) => (
+                <li key={issue} className="flex gap-2">
+                  <span aria-hidden="true">-</span>
+                  <span>{issue}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        ) : null}
+
+        {result.recommendedActions?.length ? (
+          <div className="rounded-md border border-border bg-surface-base p-4">
+            <p className="text-sm font-semibold">Recommended actions</p>
+            <ul className="mt-2 space-y-2 text-sm leading-6 text-muted-foreground">
+              {result.recommendedActions.map((action) => (
+                <li key={action} className="flex gap-2">
+                  <span aria-hidden="true">-</span>
+                  <span>{action}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        ) : null}
 
         {result.status === "FAIL" ? (
           <div className="rounded-md border border-danger/30 bg-danger-subtle p-4">
